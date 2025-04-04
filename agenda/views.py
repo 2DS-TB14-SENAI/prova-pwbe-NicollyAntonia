@@ -19,7 +19,13 @@ def servicos(request,pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    try:
+        Servico_obj = Servico.objects.get(pk=pk)
+    except servico.DoesNotExist:
+        return Response({"error": "servico não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = AgendaSerializer(Servico_obj)
+    return Response(serializer.data)
 
 @api_view(['GET', 'POST'])
 def agendar(request,pk):
@@ -34,3 +40,10 @@ def agendar(request,pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        Agendamento_obj = Agendamento.objects.get(pk=pk)
+    except agenda.DoesNotExist:
+        return Response({"error": "Agendamento não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = AgendaSerializer(Agendamento_obj)
+    return Response(serializer.data)
